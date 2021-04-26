@@ -6,7 +6,7 @@ Ethan Killen's Flask API.
 import config
 import logging
 import os
-from flask import Flask
+from flask import Flask, abort, render_template
 
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
@@ -23,6 +23,7 @@ FORBIDDEN_PATH_SEGMENTS = ["//", "..", "~"]
 ALLOWED_PATH_SUFFIXES = [".html", ".css"]
 
 
+# Handle requests
 @app.route("/<path:request_path>", methods=["GET"])
 def handle_request(request_path=None):
 	if request_path == None:
@@ -51,25 +52,20 @@ def handle_request(request_path=None):
 
 
 
-# Handle incoming requests.
-@app.route("/")
-def hello():
-    return "UOCIS docker demo!\n"
-
-
+# Handle errors
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(exception):
 	"""
 	Handles a request for a nonexistent page.
 	"""
-	return render_template(os.path.join(HERE, "404.html")), 404
+	return render_template("404.html"), 404
 
 @app.errorhandler(403)
-def forbidden_page():
+def forbidden_page(exception):
 	"""
 	Handles a request for a forbidden filepath.
 	"""
-	return render_template(os.path.join(HERE, "403.html")), 403
+	return render_template("403.html"), 403
 
 
 def get_options():
