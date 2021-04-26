@@ -71,8 +71,10 @@ def config_file_args(config_file_paths, project=None):
     """
     log.debug("-> config file args")
     config = configparser.ConfigParser()
+
     for path in config_file_paths:
         relative = os.path.join(HERE, path)
+        log.info("Checking for config at {}".format(path))
         if os.path.exists(path):
             log.info("Configuring from {}".format(path))
             config.read(path)
